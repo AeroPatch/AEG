@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Street Search</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #111111;
+  color: #fbfbfb;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  width: 380px;
+  padding: 30px;
+  background: #000000;
+  border: 1px solid #333333;
+  border-radius: 12px;
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-weight: 500;
+}
+
+h5 {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-weight: 300;
+  color: #777777;
+}
+
+input {
+  width: 320px;
+  padding: 10px;
+  margin-bottom: 10px;
+
+  background: #111111;
+  border: 1px solid #333333;
+  border-radius: 8px;
+
+  color: #fbfbfb;
+  font-size: 0.9rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: #cc142e;
+}
+
+.results {
+  margin-top: 10px;
+  text-align: left;
+  max-height: 260px;
+  overflow-y: auto;
+  border-top: 1px solid #222;
+}
+
+.item {
+  padding: 8px;
+  border-bottom: 1px solid #222;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.item:hover {
+  background: #111;
+  color: #fff;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 0.7rem;
+  color: #777777;
+}
+
+button {
+  padding: 8px;
+  flex: 1;
+  background: #cc142e;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #d21d35;
+}
+</style>
+
+</head>
+<body>
+
+<div class="main">
+
+  <div class="box">
+    <h1>Straße suchen</h1>
+    <h5>PLZ → Stadt → Straße</h5>
+
+    <input id="postal" placeholder="PLZ" oninput="search()" />
+    <input id="city" placeholder="Stadt" oninput="search()" />
+    <input id="street" placeholder="Straße" oninput="search()" />
+	
+	<div style="display:flex; gap:10px; margin-bottom:10px;">
+  <button onclick="clearResults()">Löschen</button>
+  <button onclick="copyResults()">Kopieren</button>
+</div>
+
+    <div id="results" class="results"></div>
+  </div>
+
+</div>
+
+<div class="footer"> © 2026 Gabriel Korzeniowski. Alle Rechte vorbehalten.</div>
+
+<script>
+let lastResults = [];
+
+// 🔑 SUPABASE CONFIG
+const SUPABASE_URL = "https://jaeywpspdodwkloghhew.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImphZXl3cHNwZG9kd2tsb2doaGV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczOTUwMTQsImV4cCI6MjA5Mjk3MTAxNH0.sPkSSmyIhL4qGTIiifnVaqj27wCpLl1_d0rubT_49D4";
+
+let timeout;
+
+// 🔎 SEARCH
+async function search() {
+  clearTimeout(timeout);
+
+  timeout = setTimeout(async () => {
+
+    const postal = document.getElementById("postal").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const street = document.getElementById("street").value.trim();
+
+    const params = new URLSearchParams();
+    params.append("select", "*");
+
+    if (postal) params.append("postalcode", `ilike.${postal}%`);
+    if (city) params.append("locality", `ilike.${city}%`);
+    if (street) params.append("name", `ilike.%${street}%`);
+
+    const url = `${SUPABASE_URL}/rest/v1/streets?${params.toString()}`;
+
+    try {
+      const res = await fetch(url, {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`
+        }
+      });
+
+      const data = await res.json();
+
+      const box = document.getElementById("results");
+      box.innerHTML = "";
+
+      lastResults = data.slice(0, 25);
+
+      if (!lastResults.length) {
+		box.innerHTML = "<div class='item' style='font-weight:700; color:#cc142e;'>Keine Ergebnisse...</div>";
+        return;
+      }
+
+      lastResults.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "item";
+
+        div.innerText = `${r.name}, ${r.locality} (${r.postalcode})`;
+
+        div.onclick = () => {
+          document.getElementById("street").value = r.name;
+          document.getElementById("city").value = r.locality;
+          document.getElementById("postal").value = r.postalcode;
+        };
+
+        box.appendChild(div);
+      });
+
+    } catch (err) {
+      console.error("ERROR:", err);
+    }
+
+  }, 200);
+}
+
+// 🧹 CLEAR (czyści inputy + wyniki)
+function clearResults() {
+  document.getElementById("results").innerHTML = "";
+  lastResults = [];
+
+  document.getElementById("postal").value = "";
+  document.getElementById("city").value = "";
+  document.getElementById("street").value = "";
+}
+
+// 📋 COPY (kopiuje inputy)
+function copyResults() {
+  const postal = document.getElementById("postal").value.trim();
+  const city = document.getElementById("city").value.trim();
+  const street = document.getElementById("street").value.trim();
+
+  const text = `${postal}\n${city}\n${street}`;
+
+  navigator.clipboard.writeText(text)
+    .then(() => alert("Copied input values!"))
+    .catch(err => console.error(err));
+}
+</script>
+
+</body>
+</html>
