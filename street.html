@@ -427,6 +427,38 @@ button:active {
   background: #263043;
   transform: scale(1.05);
 }
+
+.about-btn {
+  position: fixed;
+
+  top: 20px;
+  right: 95px; /* przesunięcie obok INFO */
+
+  height: 46px;
+  padding: 0 14px;
+
+  border-radius: 14px;
+
+  border: none;
+
+  background: #1a2230;
+
+  color: #fff;
+
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.about-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
 </style>
 
 </head>
@@ -456,7 +488,9 @@ button:active {
 
 <div id="toast" class="toast">Wurde kopiert!</div>
 
+<button class="about-btn" onclick="openAbout()">ABOUT</button>
 <button class="help-btn" onclick="openHelp()">INFO</button>
+
 
 <div id="helpModal" class="modal">
   <div class="modal-box">
@@ -656,6 +690,10 @@ function closeHelp() {
 
 function setLang(lang) {
   document.getElementById("helpContent").innerHTML = helpTexts[lang];
+}
+
+function openAbout() {
+  window.open("https://gabrielkorzeniowski.github.io/wizytowka/wizytowka.html", "_blank");
 }
 </script>
 
