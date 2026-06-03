@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>AEG – Notatnik konsultanta</title>
+
+<style>
+:root{
+  --color-primary:#cc142e;
+  --color-primary-hover:#e11937;
+
+  --bg:#f4f5f7;
+  --card:#ffffff;
+
+  --text:#1e1e1e;
+  --text-light:#6e6e6e;
+
+  --border:#dddddd;
+
+  --radius:18px;
+
+  --shadow:
+    0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* ===== RESET ===== */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,
+body{
+  height:100%;
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* ===== LAYOUT ===== */
+
+body{
+  padding:20px;
+}
+
+.app{
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.container-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  min-height:calc(100vh - 40px);
+}
+
+/* ===== HEADER ===== */
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.title-wrap{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+h1{
+  font-size:30px;
+  font-weight:700;
+  color:var(--color-primary);
+}
+
+.subtitle{
+  color:var(--text-light);
+  font-size:14px;
+}
+
+/* ===== BUTTONS ===== */
+
+.button-group{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  border:none;
+  outline:none;
+  cursor:pointer;
+  padding:14px 20px;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:700;
+  transition:0.2s ease;
+}
+
+.btn-primary{
+  background:var(--color-primary);
+  color:#fff;
+}
+
+.btn-primary:hover{
+  background:var(--color-primary-hover);
+  transform:translateY(-1px);
+}
+
+.btn-secondary{
+  background:#efefef;
+  color:#222;
+}
+
+.btn-secondary:hover{
+  background:#dfdfdf;
+  transform:translateY(-1px);
+}
+
+/* ===== TEXTAREA ===== */
+
+.note-wrapper{
+  flex:1;
+  display:flex;
+}
+
+textarea{
+  width:100%;
+  min-height:600px;
+  resize:vertical;
+
+  border:2px solid transparent;
+  border-radius:18px;
+
+  padding:24px;
+
+  font-size:16px;
+  line-height:1.6;
+
+  background:#fafafa;
+  color:var(--text);
+
+  transition:0.2s ease;
+
+  outline:none;
+}
+
+textarea:focus{
+  border-color:var(--color-primary);
+  background:#fff;
+}
+
+/* ===== FOOTER ===== */
+
+.footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+
+  color:var(--text-light);
+  font-size:13px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width:768px){
+
+  body{
+    padding:12px;
+  }
+
+  .container-card{
+    padding:18px;
+    border-radius:16px;
+    min-height:calc(100vh - 24px);
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  textarea{
+    min-height:500px;
+    padding:18px;
+    font-size:15px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  .button-group{
+    width:100%;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="container-card">
+
+    <!-- HEADER -->
+    <div class="header">
+
+      <div class="title-wrap">
+        <h1>Notatnik konsultanta</h1>
+        <div class="subtitle">
+          Szybkie notatki podczas rozmowy z klientem
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="saveNote()">
+          Zapisz lokalnie
+        </button>
+
+        <button class="btn btn-secondary" onclick="clearNote()">
+          Wyczyść notatkę
+        </button>
+      </div>
+
+    </div>
+
+    <!-- NOTE AREA -->
+    <div class="note-wrapper">
+      <textarea
+        id="noteArea"
+        placeholder="Wpisuj notatki z rozmowy z klientem..."
+      ></textarea>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div>
+        Autozapis w przeglądarce
+      </div>
+
+      <div id="charCount">
+        0 znaków
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* ===== ELEMENTS ===== */
+
+const noteArea = document.getElementById("noteArea");
+const charCount = document.getElementById("charCount");
+
+/* ===== LOAD NOTE ===== */
+
+window.addEventListener("load", () => {
+
+  const saved = localStorage.getItem("aeg_consultant_note");
+
+  if(saved){
+    noteArea.value = saved;
+  }
+
+  updateCounter();
+});
+
+/* ===== AUTO SAVE ===== */
+
+noteArea.addEventListener("input", () => {
+
+  localStorage.setItem(
+    "aeg_consultant_note",
+    noteArea.value
+  );
+
+  updateCounter();
+});
+
+/* ===== SAVE BUTTON ===== */
+
+function saveNote(){
+
+  localStorage.setItem(
+    "aeg_consultant_note",
+    noteArea.value
+  );
+
+  showTemporaryTitle("Notatka zapisana");
+}
+
+/* ===== CLEAR NOTE ===== */
+
+function clearNote(){
+
+  const confirmClear = confirm(
+    "Czy na pewno chcesz usunąć całą notatkę?"
+  );
+
+  if(!confirmClear) return;
+
+  noteArea.value = "";
+
+  localStorage.removeItem(
+    "aeg_consultant_note"
+  );
+
+  updateCounter();
+
+  showTemporaryTitle("Notatka wyczyszczona");
+}
+
+/* ===== COUNTER ===== */
+
+function updateCounter(){
+
+  const length = noteArea.value.length;
+
+  charCount.textContent =
+    `${length} znaków`;
+}
+
+/* ===== TEMP INFO ===== */
+
+function showTemporaryTitle(text){
+
+  const original =
+    document.title;
+
+  document.title = text;
+
+  setTimeout(() => {
+    document.title = original;
+  }, 1500);
+}
+
+</script>
+
+</body>
+</html>
