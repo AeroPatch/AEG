@@ -1,77 +1,50 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="de">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>AEG – Notatnik konsultanta</title>
+<title>AEG – Notizen</title>
 
 <style>
+
+/* ===== YOUR STYLE (UNCHANGED) ===== */
 
 :root{
   --color-primary:#cc142e;
   --color-primary-hover:#e11937;
-
   --bg:#f4f5f7;
   --card:#ffffff;
-
   --text:#1e1e1e;
   --text-light:#6e6e6e;
-
-  --border:#dddddd;
-
   --radius:18px;
-
-  --shadow:
-    0 10px 30px rgba(0,0,0,0.08);
+  --shadow:0 10px 30px rgba(0,0,0,0.08);
 }
 
-/* ===== RESET ===== */
+*{margin:0;padding:0;box-sizing:border-box;}
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-html,
-body{
+html,body{
   height:100%;
+  overflow:hidden;
   font-family:Arial, Helvetica, sans-serif;
   background:var(--bg);
   color:var(--text);
 }
 
-/* ===== BODY ===== */
-
-body{
-  padding:20px;
-}
-
-/* ===== APP ===== */
-
-.app{
-  max-width:1400px;
-  margin:0 auto;
-}
-
-/* ===== CARD ===== */
+.app{max-width:1400px;margin:0 auto;height:100vh;}
 
 .container-card{
+  height:100vh;
+  min-height:100vh;
   background:var(--card);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
-
   padding:24px;
-
-  min-height:calc(100vh - 40px);
-
   display:flex;
   flex-direction:column;
-  gap:20px;
+  gap:16px;
+  overflow:hidden;
 }
-
-/* ===== HEADER ===== */
 
 .header{
   display:flex;
@@ -81,24 +54,11 @@ body{
   flex-wrap:wrap;
 }
 
-.title-wrap{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
 h1{
   font-size:32px;
   color:var(--color-primary);
   font-weight:700;
 }
-
-.subtitle{
-  color:var(--text-light);
-  font-size:14px;
-}
-
-/* ===== BUTTONS ===== */
 
 .button-group{
   display:flex;
@@ -110,86 +70,44 @@ h1{
 .btn{
   border:none;
   outline:none;
-
   border-radius:14px;
-
   padding:14px 20px;
-
   font-size:15px;
   font-weight:700;
-
   cursor:pointer;
-
   transition:0.2s ease;
 }
 
-/* ===== PRIMARY ===== */
+.btn-secondary{background:#efefef;color:#222;}
+.btn-secondary:hover{background:#dfdfdf;transform:translateY(-1px);}
 
-.btn-primary{
-  background:var(--color-primary);
-  color:#fff;
-}
-
-.btn-primary:hover{
-  background:var(--color-primary-hover);
-  transform:translateY(-1px);
-}
-
-/* ===== SECONDARY ===== */
-
-.btn-secondary{
-  background:#efefef;
-  color:#222;
-}
-
-.btn-secondary:hover{
-  background:#dfdfdf;
-  transform:translateY(-1px);
-}
-
-/* ===== FONT BUTTONS ===== */
+.btn-danger{background:var(--color-primary);color:#fff;}
+.btn-danger:hover{background:var(--color-primary-hover);transform:translateY(-1px);}
 
 .btn-font{
   width:52px;
   min-width:52px;
-
   padding:14px 0;
-
   font-size:22px;
-  font-weight:700;
 }
-
-/* ===== NOTE WRAPPER ===== */
 
 .note-wrapper{
   flex:1;
   display:flex;
+  min-height:0;
 }
 
-/* ===== TEXTAREA ===== */
-
 textarea{
+  flex:1;
   width:100%;
-
-  min-height:650px;
-
-  resize:vertical;
-
+  min-height:0;
+  resize:none;
   border:none;
   outline:none;
-
   border-radius:18px;
-
   padding:24px;
-
   background:#fafafa;
-
-  color:var(--text);
-
   line-height:1.7;
-
-  transition:0.2s ease;
-
   border:2px solid transparent;
 }
 
@@ -198,54 +116,46 @@ textarea:focus{
   border-color:var(--color-primary);
 }
 
-/* ===== FOOTER ===== */
+.detect-panel{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  max-height:120px;
+  overflow:auto;
+  padding-top:4px;
+}
+
+.detect-item{
+  background:#eee;
+  border-radius:12px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+}
+
+.detect-item span{font-weight:700;}
+
+.detect-item button{
+  border:none;
+  background:var(--color-primary);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:12px;
+}
 
 .footer{
   display:flex;
   justify-content:space-between;
   align-items:center;
-
-  gap:12px;
   flex-wrap:wrap;
-
+  gap:12px;
   font-size:13px;
   color:var(--text-light);
-}
-
-/* ===== RESPONSIVE ===== */
-
-@media (max-width:768px){
-
-  body{
-    padding:12px;
-  }
-
-  .container-card{
-    padding:18px;
-    min-height:calc(100vh - 24px);
-  }
-
-  h1{
-    font-size:24px;
-  }
-
-  .button-group{
-    width:100%;
-  }
-
-  .btn{
-    flex:1;
-  }
-
-  .btn-font{
-    flex:unset;
-    width:52px;
-  }
-
-  textarea{
-    min-height:500px;
-    padding:18px;
-  }
+  flex-shrink:0;
 }
 
 </style>
@@ -257,73 +167,30 @@ textarea:focus{
 
   <div class="container-card">
 
-    <!-- HEADER -->
     <div class="header">
 
-      <div class="title-wrap">
-        <h1>Notatnik konsultanta</h1>
+      <h1>Notizen</h1>
 
-        <div class="subtitle">
-          Szybkie notatki podczas rozmowy z klientem
-        </div>
-      </div>
-
-      <!-- BUTTONS -->
       <div class="button-group">
 
-        <!-- FONT DOWN -->
-        <button
-          class="btn btn-secondary btn-font"
-          onclick="changeFontSize(-1)">
-          −
-        </button>
+        <button class="btn btn-secondary btn-font" onclick="changeFontSize(-1)">−</button>
+        <button class="btn btn-secondary btn-font" onclick="changeFontSize(1)">+</button>
 
-        <!-- FONT UP -->
-        <button
-          class="btn btn-secondary btn-font"
-          onclick="changeFontSize(1)">
-          +
-        </button>
-
-        <!-- SAVE -->
-        <button
-          class="btn btn-primary"
-          onclick="saveNote()">
-          Zapisz lokalnie
-        </button>
-
-        <!-- CLEAR -->
-        <button
-          class="btn btn-secondary"
-          onclick="clearNote()">
-          Wyczyść notatkę
-        </button>
+        <button class="btn btn-danger" onclick="clearNote()">Notiz löschen</button>
 
       </div>
 
     </div>
 
-    <!-- NOTE -->
     <div class="note-wrapper">
-
-      <textarea
-        id="noteArea"
-        placeholder="Wpisuj notatki z rozmowy z klientem..."
-      ></textarea>
-
+      <textarea id="noteArea" placeholder="Notizen eingeben..."></textarea>
     </div>
 
-    <!-- FOOTER -->
+    <div id="detectPanel" class="detect-panel"></div>
+
     <div class="footer">
-
-      <div>
-        Autozapis aktywny
-      </div>
-
-      <div id="charCount">
-        0 znaków
-      </div>
-
+      <div>Automatisches Speichern aktiv</div>
+      <div id="charCount">0 Zeichen</div>
     </div>
 
   </div>
@@ -332,147 +199,126 @@ textarea:focus{
 
 <script>
 
-/* ===== ELEMENTS ===== */
-
-const noteArea =
-  document.getElementById("noteArea");
-
-const charCount =
-  document.getElementById("charCount");
-
-/* ===== FONT SIZE ===== */
+const noteArea = document.getElementById("noteArea");
+const charCount = document.getElementById("charCount");
+const detectPanel = document.getElementById("detectPanel");
 
 let currentFontSize =
-  parseInt(
-    localStorage.getItem("aeg_note_font_size")
-  ) || 16;
+  parseInt(localStorage.getItem("aeg_note_font_size")) || 16;
 
-/* ===== LOAD ===== */
+/* ===== REGEX (NO PREFIX ALLOWED) ===== */
 
+const pncRegex    = /(?:^|[^0-9A-Z])(\d{9})(?=$|[^0-9A-Z])/g;
+const serialRegex = /(?:^|[^0-9A-Z])(\d{8})(?=$|[^0-9A-Z])/g;
+const fallRegex   = /(?:^|[^0-9A-Z])(\d{7})(?=$|[^0-9A-Z])/g;
+const dateRegex   = /(?:^|[^0-9])(\d{2}\.\d{2}\.\d{4})(?=$|[^0-9])/g;
+
+/* SAN */
+const san2Regex = /(?:^|[^A-Z0-9])((BB|TA|MC|BE|HH|FM)\d{7})(?=$|[^A-Z0-9])/g;
+const san1Regex = /(?:^|[^A-Z0-9])((U|P|S|E|T)\d{8})(?=$|[^A-Z0-9])/g;
+
+/* LOAD */
 window.addEventListener("load", () => {
 
-  const saved =
-    localStorage.getItem(
-      "aeg_consultant_note"
-    );
-
-  if(saved){
-    noteArea.value = saved;
-  }
+  const saved = localStorage.getItem("aeg_consultant_note");
+  if(saved) noteArea.value = saved;
 
   applyFontSize();
-
   updateCounter();
+  renderDetect();
 });
 
-/* ===== AUTO SAVE ===== */
-
+/* INPUT */
 noteArea.addEventListener("input", () => {
 
-  localStorage.setItem(
-    "aeg_consultant_note",
-    noteArea.value
-  );
+  localStorage.setItem("aeg_consultant_note", noteArea.value);
 
   updateCounter();
+  renderDetect();
 });
 
-/* ===== APPLY FONT SIZE ===== */
-
+/* FONT */
 function applyFontSize(){
-
-  noteArea.style.fontSize =
-    currentFontSize + "px";
-
-  localStorage.setItem(
-    "aeg_note_font_size",
-    currentFontSize
-  );
+  noteArea.style.fontSize = currentFontSize + "px";
+  localStorage.setItem("aeg_note_font_size", currentFontSize);
 }
 
-/* ===== CHANGE FONT SIZE ===== */
+function changeFontSize(dir){
+  currentFontSize += dir;
 
-function changeFontSize(direction){
-
-  currentFontSize += direction;
-
-  /* MIN */
-  if(currentFontSize < 12){
-    currentFontSize = 12;
-  }
-
-  /* MAX */
-  if(currentFontSize > 32){
-    currentFontSize = 32;
-  }
+  if(currentFontSize < 12) currentFontSize = 12;
+  if(currentFontSize > 32) currentFontSize = 32;
 
   applyFontSize();
 }
 
-/* ===== SAVE ===== */
-
-function saveNote(){
-
-  localStorage.setItem(
-    "aeg_consultant_note",
-    noteArea.value
-  );
-
-  showTemporaryTitle(
-    "Notatka zapisana"
-  );
-}
-
-/* ===== CLEAR ===== */
-
+/* CLEAR */
 function clearNote(){
 
-  const confirmClear = confirm(
-    "Czy na pewno chcesz usunąć całą notatkę?"
-  );
-
-  if(!confirmClear){
-    return;
-  }
+  const ok = confirm("Möchten Sie die Notiz wirklich löschen?");
+  if(!ok) return;
 
   noteArea.value = "";
-
-  localStorage.removeItem(
-    "aeg_consultant_note"
-  );
+  localStorage.removeItem("aeg_consultant_note");
 
   updateCounter();
-
-  showTemporaryTitle(
-    "Notatka wyczyszczona"
-  );
+  renderDetect();
 }
 
-/* ===== COUNTER ===== */
-
+/* COUNTER */
 function updateCounter(){
-
-  const length =
-    noteArea.value.length;
-
-  charCount.textContent =
-    `${length} znaków`;
+  charCount.textContent = `${noteArea.value.length} Zeichen`;
 }
 
-/* ===== TEMP TITLE ===== */
+/* EXTRACT SAFE */
+function extract(regex, text){
+  const out = [];
+  let m;
+  while((m = regex.exec(text)) !== null){
+    out.push(m[1]);
+  }
+  return [...new Set(out)];
+}
 
-function showTemporaryTitle(text){
+/* RENDER */
+function renderDetect(){
 
-  const original =
-    document.title;
+  const t = noteArea.value;
 
-  document.title = text;
+  const pnc = extract(pncRegex,t);
+  const sn  = extract(serialRegex,t);
+  const fall= extract(fallRegex,t);
+  const date= extract(dateRegex,t);
 
-  setTimeout(() => {
+  let san2=[], san1=[];
+  let m;
 
-    document.title = original;
+  while((m = san2Regex.exec(t)) !== null) san2.push(m[1]);
+  while((m = san1Regex.exec(t)) !== null) san1.push(m[1]);
 
-  }, 1500);
+  const all = [
+    ["PNC", pnc],
+    ["S/N", sn],
+    ["Fall", fall],
+    ["Datum", date],
+    ["SA", san2],
+    ["SA", san1]
+  ];
+
+  detectPanel.innerHTML = all
+    .filter(x => x[1].length)
+    .map(x => `
+      <div class="detect-item">
+        <span>${x[0]}: ${x[1].join(", ")}</span>
+        <button onclick="copyVal('${x[1][0]}')">Kopiuj</button>
+      </div>
+    `)
+    .join("");
+}
+
+/* COPY */
+function copyVal(v){
+  navigator.clipboard.writeText(v);
 }
 
 </script>
